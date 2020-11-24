@@ -13,6 +13,7 @@ const connection = mysql.createConnection({
 connection.connect();
 
 connection.query(`USE bluekite3;`);
+
 /*
 connection.query(`CREATE TABLE users (username VARCHAR(50));`);
 */
