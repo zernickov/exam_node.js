@@ -1,12 +1,21 @@
 const express = require("express");
 const mysql = require("mysql");
 const app = express();
-
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
+const session = require("express-session");
 require("dotenv").config();
 
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/public/login_page/login_page.html")
@@ -26,7 +35,7 @@ connection.connect();
 
 connection.query(`USE bluekite3;`);
 
-// connection.query("DROP TABLE users;");
+//connection.query("DROP TABLE users;");
 /*
 exports.register = async function(req, res){
     const username = {"username": req.body.username}
@@ -34,25 +43,48 @@ exports.register = async function(req, res){
 };
 */
 
+//connection.query(``)
 
-
-// connection.query(`CREATE TABLE users (username VARCHAR(50));`);
+//connection.query(`CREATE TABLE users (user_id INT NOT NULL AUTO_INCREMENT, username VARCHAR(50) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(user_id));`);
 
 
 app.post("/register", (req, res) => {
-    connection.query('INSERT INTO users SET ?', req.body, function (error) {
-        if (error) {
-            res.send({
-                "code": 400,
-                "failed": "error ocurred"
-            })
-        } else {
-            res.send({
-                "code": 200,
-                "success": "user registered sucessfully"
-            });
+    bcrypt.genSalt(saltRounds, function (saltErr, salt) {
+        if (saltErr) {
+            console.log("SALT ERROR:", saltErr);
         }
+        bcrypt.hash(req.body.password, salt, function (hashErr, hash) {
+            if (hashErr) {
+                console.log("HASH ERROR:", hashErr);
+            }
+            connection.query(`INSERT INTO users (username, password) VALUES (?, ?);`, [req.body.username, hash], function (dbErr) {
+                if (dbErr) {
+                    console.log("DATABASE ERROR:", dbErr);
+                }
+                else {
+                    res.redirect("/");
+                }
+            });
+        });
     });
+});
+
+app.post("/login", (req, res) => {
+    connection.query(`SELECT password FROM users WHERE username=?;`, req.body.username, function (err, result) {
+        const hashed = JSON.parse(JSON.stringify(result[0].password));
+        bcrypt.compare(req.body.password, hashed, function (err, res) {
+            if (err) {
+                console.log("ERROR:", err);
+            }
+            else if (res) {
+                console.log("SUCCESS:", res);
+            }
+            else {
+                console.log("SOMETHING ELSE WENT WRONG, RES:", res);
+            }
+        })
+    });
+    res.redirect("/");
 });
 
 /*
