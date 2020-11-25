@@ -9,13 +9,19 @@
 <h1>Create Account</h1>
 <label>Username</label>
 <br>
-<input type="text" placeholder="Enter Username" name="username" required>
-<br>
-<label>Password</label>
-<br>
-<input type="password" placeholder="Enter Password" name="psw" required>
-<br>
-<button type="submit" onclick="createUser()">Create</button>
+<form action="/register" method="POST">
+    <div>
+        <label for="username">username</label>
+        <input name="username" id="username" value="patr7756">
+    </div>
+    <!-- <div>
+        <label for="to">Who do you want to say it to?</label>
+        <input name="to" id="to" value="Mom">
+    </div>-->
+    <div>
+        <button>create</button>
+    </div>
+</form>
 <br>
 <a href="../login_page/login_page.html">Already registered? click here</a>
 <script src="./register_page.js"></script>
