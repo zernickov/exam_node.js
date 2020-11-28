@@ -17,7 +17,32 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-app.get("/", (req, res) => {
+
+const redirectLogin = (req, res, next) => {
+  if (!req.session.userId){
+      console.log("here!")
+    res.redirect("/login");
+  } else {
+      next();
+  }
+};
+
+const redirectHome = (req, res, next) => {
+    if (req.session.userId){
+        res.redirect("/home");
+    } else {
+        next();
+    }
+};
+
+app.get("/", redirectLogin, (req, res) => {
+    res.sendFile(__dirname + "/public/home_page/home_page.html")
+});
+
+
+
+app.get("/login", redirectHome, (req, res) => {
+
     res.sendFile(__dirname + "/public/login_page/login_page.html")
 });
 
@@ -48,7 +73,7 @@ exports.register = async function(req, res){
 //connection.query(`CREATE TABLE users (user_id INT NOT NULL AUTO_INCREMENT, username VARCHAR(50) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(user_id));`);
 
 
-app.post("/register", (req, res) => {
+app.post("/register", redirectHome, (req, res) => {
     bcrypt.genSalt(saltRounds, function (saltErr, salt) {
         if (saltErr) {
             console.log("SALT ERROR:", saltErr);
@@ -62,6 +87,7 @@ app.post("/register", (req, res) => {
                     console.log("DATABASE ERROR:", dbErr);
                 }
                 else {
+
                     res.redirect("/");
                 }
             });
@@ -69,7 +95,7 @@ app.post("/register", (req, res) => {
     });
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", redirectHome, (req, res) => {
     connection.query(`SELECT password FROM users WHERE username=?;`, req.body.username, function (err, result) {
         const hashed = JSON.parse(JSON.stringify(result[0].password));
         bcrypt.compare(req.body.password, hashed, function (err, res) {
@@ -78,6 +104,7 @@ app.post("/login", (req, res) => {
             }
             else if (res) {
                 console.log("SUCCESS:", res);
+                req.session.userId = 1;
             }
             else {
                 console.log("SOMETHING ELSE WENT WRONG, RES:", res);
@@ -114,7 +141,7 @@ exports.register = async function(req,res){
 */
 connection.query(`SELECT * FROM users;`, (error, result, fields) => {
     console.log(result);
-    console.log(fields);
+    // console.log(fields);
 
 });
 
