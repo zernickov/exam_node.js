@@ -11,10 +11,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
+    name: "MandatorySession",
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: {
+        secure: false }
 }));
 
 const rateLimiter = require("express-rate-limit");
@@ -25,6 +27,35 @@ const authLimiter = rateLimiter({
 });
 
 app.use(authLimiter);
+
+const nodemailer = require("nodemailer");
+
+let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: "robogpat@gmail.com",
+        pass: "robogpat123"
+    }
+});
+
+function mailSender(mail, name){
+    let mailOptions = {
+        from: "robogpat@gmail.com",
+        to: mail,
+        subject: "Welcome",
+        text: `Hello ${name} welcome to the app`
+    };
+
+    transporter.sendMail(mailOptions, function(err, data) {
+        if (err){
+            console.log(err);
+        } else {
+            console.log("Email Sent!!");
+        }
+    });
+}
+
+
 
 const redirectLogin = (req, res, next) => {
   if (!req.session.userId){
@@ -58,7 +89,6 @@ app.get("/", redirectLogin, (req, res) => {
 });
 
 
-
 app.get("/login", redirectHome, (req, res) => {
     res.sendFile(__dirname + "/public/login_page/login_page.html")
 });
@@ -82,16 +112,8 @@ connection.connect();
 connection.query(`USE bluekite3;`);
 
 // connection.query("DROP TABLE users;");
-/*
-exports.register = async function(req, res){
-    const username = {"username": req.body.username}
-    res.
-};
-*/
 
-// connection.query(``)
-
-// connection.query(`CREATE TABLE users (user_id INT NOT NULL AUTO_INCREMENT, username VARCHAR(50) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(user_id));`);
+// connection.query(`CREATE TABLE users (user_id INT NOT NULL AUTO_INCREMENT, username VARCHAR(50) NOT NULL, email VARCHAR(50) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(user_id));`);
 
 
 app.post("/register", (req, res) => {
@@ -103,11 +125,12 @@ app.post("/register", (req, res) => {
             if (hashErr) {
                 console.log("HASH ERROR:", hashErr);
             }
-            connection.query(`INSERT INTO users (username, password) VALUES (?, ?);`, [req.body.username, hash], function (dbErr) {
+            connection.query(`INSERT INTO users (username, email, password) VALUES (?, ?, ?);`, [req.body.username, req.body.email, hash], function (dbErr) {
                 if (dbErr) {
                     console.log("DATABASE ERROR:", dbErr);
                 }
                 else {
+                    mailSender(req.body.email, req.body.username);
                     connection.query(`SELECT user_id FROM users WHERE username=?`, req.body.username, function (err, result) {
                         const userid = JSON.parse(JSON.stringify(result[0].user_id));
                         req.session.userId = userid;
@@ -142,42 +165,12 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-    req.session.destroy(err => {
-        if(err){
-            res.redirect("/");
-        }
-    });
+    req.session.destroy();
     res.redirect("/");
 });
-/*
-exports.register = async function(req,res){
-    const password = req.body.password;
 
-    let users={
-        "username":req.body.username,
-        "password":password
-    };
-
-    connection.query('INSERT INTO users SET ?',users, function (error, results, fields) {
-        if (error) {
-            res.send({
-                "code":400,
-                "failed":"error ocurred"
-            })
-        } else {
-            res.send({
-                "code":200,
-                "success":"user registered sucessfully"
-            });
-        }
-    });
-};
-
-*/
 connection.query(`SELECT * FROM users;`, (error, result, fields) => {
     console.log(result);
-    // console.log(fields);
-
 });
 
 const port = process.env.PORT || 8080;
