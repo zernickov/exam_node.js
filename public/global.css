@@ -1,0 +1,61 @@
+body {
+    background: rgb(87,236,246);
+    background: linear-gradient(90deg, rgba(87,236,246,1) 0%, rgba(94,255,168,1) 100%);
+    font-family: Quicksand;
+    color: whitesmoke;
+}
+
+.content-wrapper {
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 40vmax;
+    margin-top: 15%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 40px;
+}
+
+.register-link {
+    padding-bottom: 10px;
+    text-decoration: none;
+}
+
+.user-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    font-size: 20px;
+    outline: none;
+    text-align: center;
+    padding: 4px;
+    width: 50%;
+}
+
+.login-button {
+    font-size: 1.2em;
+    font-weight: bold;
+    width: 52%;
+    margin-top: 10px;
+    padding: 15px;
+    background: rgb(94,255,168);
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.login-button:hover {
+    width: 50%;
+    border-radius: 30px;
+    box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.3);
+}
+
+.login-header {
+    padding-top: 20px;
+
+}
+
+.input-label {
+    font-size: 1.2em;
+    outline: none;
+}

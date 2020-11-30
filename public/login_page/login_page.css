@@ -1,3 +1,37 @@
-h1 {
-    font-size: 20px;
+#cookie-disclaimer-box {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+#cookie-disclaimer {
+    margin-left: 20px;
+    width: 80%;
+    float: left;
+}
+
+#exit-cookie {
+    margin-left: 40px;
+    font-size: 1.2em;
+    font-weight: bold;
+    width: 10%;
+    margin-top: 10px;
+    padding: 15px;
+    background: rgb(87,236,246);
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    transition: 0.3s;
+}
+
+#exit-cookie:hover {
+    width: 9%;
+    border-radius: 30px;
+    box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hidden {
+    display: none
 }
