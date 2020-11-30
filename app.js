@@ -20,7 +20,7 @@ app.use(session({
 
 const redirectLogin = (req, res, next) => {
   if (!req.session.userId){
-      console.log("here!")
+      console.log(req.session.userId);
     res.redirect("/login");
   } else {
       next();
@@ -29,25 +29,38 @@ const redirectLogin = (req, res, next) => {
 
 const redirectHome = (req, res, next) => {
     if (req.session.userId){
-        res.redirect("/home");
+        console.log(req.session.userId);
+        res.redirect("/");
     } else {
         next();
     }
 };
 
+const redirectAway = (req, res, next) => {
+  if (!req.session.userId){
+      res.send("<h1>Unauthorized</h1>");
+  } else {
+      next();
+  }
+};
+
 app.get("/", redirectLogin, (req, res) => {
+    // const { userId } = req.session;
     res.sendFile(__dirname + "/public/home_page/home_page.html")
 });
 
 
 
 app.get("/login", redirectHome, (req, res) => {
-
     res.sendFile(__dirname + "/public/login_page/login_page.html")
 });
 
-app.get("/register", (req, res) => {
+app.get("/register", redirectHome, (req, res) => {
     res.sendFile(__dirname + "/public/register_page/register_page.html")
+});
+
+app.get("/unauth", redirectAway, (req, res) => {
+    res.sendFile(__dirname + "/public/unauth/unauth.html")
 });
 
 const connection = mysql.createConnection({
@@ -60,7 +73,7 @@ connection.connect();
 
 connection.query(`USE bluekite3;`);
 
-//connection.query("DROP TABLE users;");
+// connection.query("DROP TABLE users;");
 /*
 exports.register = async function(req, res){
     const username = {"username": req.body.username}
@@ -68,12 +81,12 @@ exports.register = async function(req, res){
 };
 */
 
-//connection.query(``)
+// connection.query(``)
 
-//connection.query(`CREATE TABLE users (user_id INT NOT NULL AUTO_INCREMENT, username VARCHAR(50) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(user_id));`);
+// connection.query(`CREATE TABLE users (user_id INT NOT NULL AUTO_INCREMENT, username VARCHAR(50) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(user_id));`);
 
 
-app.post("/register", redirectHome, (req, res) => {
+app.post("/register", (req, res) => {
     bcrypt.genSalt(saltRounds, function (saltErr, salt) {
         if (saltErr) {
             console.log("SALT ERROR:", saltErr);
@@ -87,33 +100,47 @@ app.post("/register", redirectHome, (req, res) => {
                     console.log("DATABASE ERROR:", dbErr);
                 }
                 else {
-
-                    res.redirect("/");
+                    connection.query(`SELECT user_id FROM users WHERE username=?`, req.body.username, function (err, result) {
+                        const userid = JSON.parse(JSON.stringify(result[0].user_id));
+                        req.session.userId = userid;
+                        res.redirect("/");
+                    })
                 }
             });
         });
     });
 });
 
-app.post("/login", redirectHome, (req, res) => {
-    connection.query(`SELECT password FROM users WHERE username=?;`, req.body.username, function (err, result) {
+app.post("/login", (req, res) => {
+    connection.query(`SELECT * FROM users WHERE username=?;`, req.body.username, function (err, result) {
+        const userid = JSON.parse(JSON.stringify(result[0].user_id));
+        console.log(userid);
         const hashed = JSON.parse(JSON.stringify(result[0].password));
-        bcrypt.compare(req.body.password, hashed, function (err, res) {
+        bcrypt.compare(req.body.password, hashed, function (err, result1) {
             if (err) {
                 console.log("ERROR:", err);
             }
-            else if (res) {
-                console.log("SUCCESS:", res);
-                req.session.userId = 1;
+            else if (result1) {
+                console.log("SUCCESS:", result1);
+                req.session.userId = userid;
+                console.log("session: ", req.session.userId);
+                res.redirect("/");
             }
             else {
-                console.log("SOMETHING ELSE WENT WRONG, RES:", res);
+                console.log("SOMETHING ELSE WENT WRONG, RES:", result1);
             }
         })
     });
-    res.redirect("/");
 });
 
+app.post("/logout", (req, res) => {
+    req.session.destroy(err => {
+        if(err){
+            res.redirect("/");
+        }
+    });
+    res.redirect("/");
+});
 /*
 exports.register = async function(req,res){
     const password = req.body.password;
