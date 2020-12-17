@@ -5,10 +5,29 @@
     <title>Home</title>
     <link rel="stylesheet" href="../home_page/home_page.css">
     <link rel="stylesheet" href="../global.css">
+    <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script defer src="../home_page/home_page.js"></script>
 </head>
 <body>
 <div class="content-wrapper">
 <h1 class="login-header">You are logged in!</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <h2>Chat</h2>
+                <div class="container-box">
+                    <div class="chat-container" id="chat-container">
+                        <div class="message" id="message-container"></div>
+                    </div>
+                    <form class="send-message-form" id="send-container">
+                        <input type="text" id="message-input">
+                        <button type="submit" id="send-button">Send</button>
+                    </form>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 <form method="POST" action="/logout">
     <button class="login-button">Logout</button>
     <br><br>

@@ -7,6 +7,8 @@ require("dotenv").config();
 const app = express();
 const saltRounds = 10;
 const nodemailer = require("nodemailer");
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
 let transporter = nodemailer.createTransport({
     service: "gmail",
@@ -139,6 +141,7 @@ app.post("/login", (req, res) => {
             } else if (result1) {
                 console.log("SUCCESS:", result1);
                 req.session.userId = userid;
+                res.cookie('name', req.body.username, {maxAge: 3600000});
                 console.log("session: ", req.session.userId);
                 res.redirect("/");
             } else {
@@ -159,9 +162,30 @@ connection.query(`SELECT * FROM users;`, (error, result) => {
     console.log(result);
 });
 
+const users = {};
+
+// io.use(sharedsession(session));
+
+io.on('connection', (socket) => {
+    socket.on('new-user', (name) => {
+        // console.log(socket.handshake.session);
+        // const name = name;
+        users[socket.id] = name;
+        socket.broadcast.emit('user-connected', name);
+    });
+    socket.on('send-chat-message', (message) => {
+        socket.broadcast.emit('chat-message', { message: message, name: users[socket.id] });
+    });
+    socket.on('disconnect', () => {
+        socket.broadcast.emit('user-disconnected', users[socket.id]);
+        delete users[socket.id];
+    });
+});
+
+
 const port = process.env.PORT || 8080;
 
-app.listen(port, (error) => {
+http.listen(port, (error) => {
     if (error) {
         console.log("Server couldn't start:", error);
     }
