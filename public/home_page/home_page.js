@@ -3,7 +3,6 @@ const messageContainer = document.getElementById('message-container');
 const chatContainer = document.getElementById('chat-container');
 const messageForm = document.getElementById('send-container');
 const messageInput = document.getElementById('message-input');
-const fetchButton = document.getElementById('fetch-button');
 
 function runFunction() {
     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -17,8 +16,8 @@ $('#fetch-button').click(() => {
             Authorization: 'Bearer IGf47gpefBGHvAgsnQd9'
         })
     }).then(r => r.json()).then(r => {
-        appendMessage(`You: ${r["docs"]["0"]["dialog"]}`);
-        socket.emit('send-chat-message', r["docs"]["0"]["dialog"]);
+        appendMessage(`You: ${r['docs']['0']['dialog']}`);
+        socket.emit('send-chat-message', r['docs']['0']['dialog']);
     });
 });
 
@@ -27,8 +26,6 @@ function appendMessage(message) {
     messageElement.innerText = message;
     messageContainer.append(messageElement);
 }
-
-
 
 // const name = req.session.username;
 const str = document.cookie;
@@ -57,7 +54,3 @@ messageForm.addEventListener('submit', (event) => {
     socket.emit('send-chat-message', message);
     messageInput.value = '';
 });
-
-
-
-
