@@ -1,0 +1,44 @@
+.chat-container {
+    text-align: left;
+    background-color: black;
+    color: white;
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.message {
+    margin-left: 15px;
+}
+
+#send-container input {
+    width: 80%;
+    height: 30px;
+    background: black;
+    color: whitesmoke;
+    border: 2px solid rgb(94,255,168);
+    border-bottom-left-radius: 15px;
+    outline: none;
+}
+
+#send-container button {
+    margin-left: -5px;
+    height: 36px;
+    font-weight: bold;
+    background: rgb(94,255,168);
+    border: none;
+    border-bottom-right-radius: 15px;
+    outline: none;
+}
+
+#fetch-button {
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 1.5em;
+    width: 1.25em;
+    color: rgb(94,255,168);
+    background: black;
+    border: none;
+    border-radius: 50px;
+    outline: none;
+}

@@ -7,23 +7,24 @@
     <link rel="stylesheet" href="../global.css">
     <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script defer src="../home_page/home_page.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 </head>
 <body>
 <div class="content-wrapper">
-<h1 class="login-header">You are logged in!</h1>
     <div class="container">
         <div class="row">
             <div class="col-4">
-                <h2>Chat</h2>
-                <div class="container-box">
+                <h1 class="login-header">Chat</h1>
+                <div class="container-box" id="container-box-id">
                     <div class="chat-container" id="chat-container">
                         <div class="message" id="message-container"></div>
                     </div>
                     <form class="send-message-form" id="send-container">
                         <input type="text" id="message-input">
                         <button type="submit" id="send-button">Send</button>
+
                     </form>
-                    </form>
+                    <button id="fetch-button">?</button>
                 </div>
             </div>
         </div>
@@ -36,5 +37,9 @@
     </div>
 </form>
 </div>
+    <script>
+
+
+    </script>
 </body>
 </html>
