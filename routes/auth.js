@@ -29,7 +29,6 @@ function mailSender(mail, name) {
     });
 }
 
-
 const authLimiter = rateLimiter({
     windowMs: 10 * 60 * 1000, // 10 minutes
     max: 100 // limit each IP to 6 requests per windowMs
@@ -96,8 +95,5 @@ router.post('/login', (req, res) => {
             res.redirect('/');
         }});
 });
-
-
-
 
 module.exports = router;

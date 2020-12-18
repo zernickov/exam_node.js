@@ -47,4 +47,3 @@ http.listen(port, (error) => {
     }
     console.log('Server started on port:', Number(port));
 });
-
