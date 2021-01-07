@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io('http://localhost:3000');
 const messageContainer = document.getElementById('message-container');
 const chatContainer = document.getElementById('chat-container');
 const messageForm = document.getElementById('send-container');
