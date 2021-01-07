@@ -16,7 +16,7 @@
     height: 30px;
     background: black;
     color: whitesmoke;
-    border: 2px solid rgb(94,255,168);
+    border: 2px solid #fbeca3;
     border-bottom-left-radius: 15px;
     outline: none;
 }
@@ -25,7 +25,7 @@
     margin-left: -5px;
     height: 36px;
     font-weight: bold;
-    background: rgb(94,255,168);
+    background: #fbeca3;
     border: none;
     border-bottom-right-radius: 15px;
     outline: none;
@@ -36,7 +36,7 @@
     margin-top: 5px;
     font-size: 1.5em;
     width: 1.25em;
-    color: rgb(94,255,168);
+    color: #fbeca3;
     background: black;
     border: none;
     border-radius: 50px;

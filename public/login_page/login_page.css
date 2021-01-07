@@ -16,10 +16,10 @@
     margin-left: 40px;
     font-size: 1.2em;
     font-weight: bold;
-    width: 10%;
+    width: 106px;
     margin-top: 10px;
     padding: 15px;
-    background: rgb(87,236,246);
+    background: #fbeca3;
     border: none;
     border-radius: 15px;
     outline: none;
@@ -27,7 +27,8 @@
 }
 
 #exit-cookie:hover {
-    width: 9%;
+    margin-left: 43px;
+    width: 100px;
     border-radius: 30px;
     box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.3);
 }
