@@ -48,6 +48,11 @@ connection.query(`USE bluekite3;`);
 // connection.query("DROP TABLE users;");
 // connection.query(`CREATE TABLE users (user_id INT NOT NULL AUTO_INCREMENT, username VARCHAR(50) NOT NULL, email VARCHAR(50) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(user_id));`);
 
+connection.query('SELECT * FROM users;', function (err, res, fields) {
+    console.log(res)
+});
+// connection.query('DELETE FROM users WHERE user_id = 13;');
+
 router.post('/register', (req, res) => {
     bcrypt.genSalt(saltRounds,(saltErr, salt) => {
         if (saltErr) {
