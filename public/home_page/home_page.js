@@ -1,5 +1,6 @@
 const socket = io();
 const messageContainer = document.getElementById('message-container');
+//const nameElement = document.getElementById('name-element');
 const chatContainer = document.getElementById('chat-container');
 const messageForm = document.getElementById('send-container');
 const messageInput = document.getElementById('message-input');
@@ -28,50 +29,53 @@ $('#fetch-movies-button').click(() => {
             Authorization: 'Bearer IGf47gpefBGHvAgsnQd9'
         })
     }).then(r => r.json()).then(r => {
-        console.log(r);
-        appendMessage(`You: 
-        The Hobbit: ${r['docs']['2']['name']}, 
+        const mes = `The Hobbit: ${r['docs']['2']['name']}, 
         The Hobbit: ${r['docs']['3']['name']},
         The Hobbit: ${r['docs']['4']['name']},
         LOTR: ${r['docs']['6']['name']},
         LOTR: ${r['docs']['5']['name']},
         LOTR: ${r['docs']['7']['name']}
-        
-        --- Which is your favourite of the movies? ---`);
-        socket.emit('send-chat-message', r);
+        --- Which is your favourite of the movies? ---
+        `;
+        console.log(mes);
+        appendMessage('You:', mes);
+        socket.emit('send-chat-message', mes);
     });
 });
 
-function appendMessage(message) {
-    const messageElement = document.createElement('div');
-    messageElement.innerText = message;
-    messageContainer.append(messageElement);
+function appendMessage(name, message) {
+    const nameElement = document.createElement('span');
+    const messageElement = document.createElement('span');
+    nameElement.style.cssText = 'color:red; padding-right: 10px';
+    nameElement.innerText = name;
+    messageElement.innerText = message + '\n';
+    messageContainer.append(nameElement, messageElement);
 }
 
 // const name = req.session.username;
 const str = document.cookie;
 const name = str.split('=').slice(-1);
-appendMessage('You joined');
+appendMessage('You joined', '');
 socket.emit('new-user', name);
 
 
 socket.on('chat-message', (data) => {
-    appendMessage(`${data.name}: ${data.message}`);
+    appendMessage(`${data.name}:`, `${data.message}`);
 });
 
 socket.on('user-connected', (name) => {
-    appendMessage(`${name} connected`);
+    appendMessage(`${name} connected`, ``);
 });
 
 socket.on('user-disconnected', (name) => {
-    appendMessage(`${name} disconnected`);
+    appendMessage(`${name} disconnected`, ``);
 
 });
 
 messageForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const message = messageInput.value;
-    appendMessage(`You: ${message}`);
+    appendMessage(`You:`, `${message}`);
     socket.emit('send-chat-message', message);
     messageInput.value = '';
 });
