@@ -21,6 +21,27 @@ $('#fetch-button').click(() => {
     });
 });
 
+$('#fetch-movies-button').click(() => {
+    // let randomNumber = Math.floor(Math.random() * 199) + 800;
+    fetch(`https://the-one-api.dev/v2/movie`, {
+        headers: new Headers({
+            Authorization: 'Bearer IGf47gpefBGHvAgsnQd9'
+        })
+    }).then(r => r.json()).then(r => {
+        console.log(r);
+        appendMessage(`You: 
+        The Hobbit: ${r['docs']['2']['name']}, 
+        The Hobbit: ${r['docs']['3']['name']},
+        The Hobbit: ${r['docs']['4']['name']},
+        LOTR: ${r['docs']['6']['name']},
+        LOTR: ${r['docs']['5']['name']},
+        LOTR: ${r['docs']['7']['name']}
+        
+        --- Which is your favourite of the movies? ---`);
+        socket.emit('send-chat-message', r);
+    });
+});
+
 function appendMessage(message) {
     const messageElement = document.createElement('div');
     messageElement.innerText = message;
