@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 require('dotenv').config();
 const app = express();
-const http = require('http').createServer(app);
+const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 app.use(express.static('public'));
@@ -25,7 +25,7 @@ app.use(viewRoute);
 
 const users = {};
 
-io.sockets.on('connection', (socket) => {
+io.on('connection', (socket) => {
     socket.on('new-user', (name) => {
         users[socket.id] = name;
         socket.broadcast.emit('user-connected', name);
