@@ -17,7 +17,7 @@ $('#fetch-button').click(() => {
             Authorization: 'Bearer IGf47gpefBGHvAgsnQd9'
         })
     }).then(r => r.json()).then(r => {
-        appendMessage(`You: ${r['docs']['0']['dialog']}`);
+        appendMessage('You:', `${r['docs']['0']['dialog']}`);
         socket.emit('send-chat-message', r['docs']['0']['dialog']);
     });
 });
@@ -68,7 +68,7 @@ socket.on('user-connected', (name) => {
 });
 
 socket.on('user-disconnected', (name) => {
-    appendMessage(`${name} disconnected`, ``);
+    appendMessage(`${name} disconnected`, ``)
 
 });
 
