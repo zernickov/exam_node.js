@@ -23,7 +23,6 @@ $('#fetch-button').click(() => {
 });
 
 $('#fetch-movies-button').click(() => {
-    // let randomNumber = Math.floor(Math.random() * 199) + 800;
     fetch(`https://the-one-api.dev/v2/movie`, {
         headers: new Headers({
             Authorization: 'Bearer IGf47gpefBGHvAgsnQd9'
@@ -40,6 +39,31 @@ $('#fetch-movies-button').click(() => {
         console.log(mes);
         appendMessage('You:', mes);
         socket.emit('send-chat-message', mes);
+    });
+});
+
+$('#fetch-chapter-button').click(() => {
+    let randomNumber61 = Math.floor(Math.random() * 62);
+    fetch(`https://the-one-api.dev/v2/chapter`, {
+        headers: new Headers({
+            Authorization: 'Bearer IGf47gpefBGHvAgsnQd9'
+        })
+    }).then(r => r.json()).then(r => {
+        console.log(r);
+        fetch(`https://the-one-api.dev/v2/book`, {
+            headers: new Headers({
+                Authorization: 'Bearer IGf47gpefBGHvAgsnQd9'
+            })
+        }).then(r1 => r1.json()).then(r1 => {
+            console.log(r1['docs']);
+            const message = `${r['docs'][randomNumber61]['chapterName']}`;
+            r1['docs'].forEach(book => {if (book['_id'] === `${r['docs'][randomNumber61]['book']}`){
+                const finishedMessage = message + 'from ' + book['name'] + '\n' +
+                '--- What do you think about that chapter? --- ';
+                appendMessage('You:', finishedMessage);
+                socket.emit('send-chat-message', finishedMessage);
+            }});
+        });
     });
 });
 
