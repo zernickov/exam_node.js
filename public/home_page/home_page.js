@@ -66,7 +66,7 @@ $('#fetch-chapter-button').click(() => {
 function appendMessage(name, message) {
     const nameElement = document.createElement('span');
     const messageElement = document.createElement('span');
-    nameElement.style.cssText = 'color:red; padding-right: 10px';
+    nameElement.style.cssText = 'color: #bf758c; padding-right: 10px';
     nameElement.innerText = name;
     messageElement.innerText = message + '\n';
     messageContainer.append(nameElement, messageElement);
