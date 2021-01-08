@@ -34,5 +34,10 @@
 }
 
 .hidden {
-    display: none
+    display: none;
+}
+
+#big-logo {
+    width: 80%;
+    padding-top: 30px;
 }

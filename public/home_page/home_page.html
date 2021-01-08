@@ -14,7 +14,7 @@
     <div class="container">
         <div class="row">
             <div class="col-4">
-                <img style="width: 30%; padding-top: 10px" src="../assets/wechat_logo.png">
+                <img id="small-logo" src="../assets/wechat_logo.png">
                 <div class="container-box" id="container-box-id">
                     <div class="chat-container" id="chat-container">
                         <div class="message" id="message-container">
@@ -25,18 +25,18 @@
                         <button type="submit" id="send-button">Send</button>
 
                     </form>
-                    <button id="fetch-quote-button">Ask about quote</button>
-                    <button id="fetch-movies-button">Ask about movies</button>
-                    <button id="fetch-chapter-button">Ask about book chapters</button>
+                    <button class="fetch-button" id="fetch-quote-button">ask about quote</button>
+                    <button class="fetch-button" id="fetch-movies-button">ask about movies</button>
+                    <button class="fetch-button" id="fetch-chapter-button">ask about book chapters</button>
                 </div>
             </div>
         </div>
     </div>
 <form method="POST" action="/logout">
-    <button class="login-button">Logout</button>
+    <button class="logout-button">Logout</button>
     <br><br>
     <div class="register-link">
-        <a href="https://lotr.fandom.com/wiki/Main_Page" target="_blank">LOTR fandom... click here</a>
+        <a href="https://lotr.fandom.com/wiki/Main_Page" target="_blank">click here for more LOTR fandom</a>
     </div>
 </form>
 </div>

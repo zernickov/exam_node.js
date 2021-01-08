@@ -1,8 +1,8 @@
 body {
     background: rgb(87,236,246);
-    background: linear-gradient(90deg, #cab1a2 0, #c4b479 100%);
-    font-family: "Comic Sans MS";
-    color: #fbeca3;
+    background: linear-gradient(90deg, #C38d9e 0, #41b3a3 100%);
+    font-family: Quicksand;
+    color: #85DCBA;
 }
 
 .content-wrapper {
@@ -32,12 +32,13 @@ body {
 }
 
 .login-button {
+    font-family: Quicksand;
     font-size: 1.2em;
     font-weight: bold;
     width: 52%;
     margin-top: 10px;
     padding: 15px;
-    background: #fbeca3;
+    background: #85DCBA;
     border: none;
     border-radius: 15px;
     outline: none;
