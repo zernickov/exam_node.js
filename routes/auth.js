@@ -18,7 +18,7 @@ function mailSender(mail, name) {
         from: 'robogpat@gmail.com',
         to: mail,
         subject: 'Welcome',
-        text: `Hello ${name} welcome to the app`
+        text: `Hello ${name} welcome to WeChat LOTR`
     };
     transporter.sendMail(mailOptions, (err) => {
         if (err) {
@@ -31,76 +31,104 @@ function mailSender(mail, name) {
 
 
 const authLimiter = rateLimiter({
-    windowMs: 10 * 60 * 1000, // 10 minutes
+    windowMs:  10 * 60 * 1000, // 10 minutes
     max: 100 // limit each IP to 6 requests per windowMs
 });
 
 router.use('/login', authLimiter);
 
-const connection = mysql.createConnection({
-    host        : process.env.DB_HOST,
-    user        : process.env.DB_USER,
-    password    : process.env.DB_PASS
+
+let pool = mysql.createPool({
+    host           : process.env.DB_HOST,
+    user           : process.env.DB_USER,
+    password       : process.env.DB_PASS,
+    database       : 'bluekite3'
 });
 
-connection.connect();
-connection.query(`USE bluekite3;`);
+// connection.query(`USE bluekite3;`);
 // connection.query("DROP TABLE users;");
 // connection.query(`CREATE TABLE users (user_id INT NOT NULL AUTO_INCREMENT, username VARCHAR(50) NOT NULL, email VARCHAR(50) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(user_id));`);
+//connection.query(`DELETE FROM users WHERE user_id > 1;`);
 
-connection.query('SELECT * FROM users;', function (err, res, fields) {
-    console.log(res)
-});
-// connection.query('DELETE FROM users WHERE user_id = 13;');
 
-router.post('/register', (req, res) => {
-    bcrypt.genSalt(saltRounds,(saltErr, salt) => {
-        if (saltErr) {
-            console.log('SALT ERROR:', saltErr);
-        }
-        bcrypt.hash(req.body.password, salt, (hashErr, hash) => {
-            if (hashErr) {
-                console.log('HASH ERROR:', hashErr);
-            }
-            connection.query(`INSERT INTO users (username, email, password) VALUES (?, ?, ?);`, [req.body.username, req.body.email, hash], (dbErr) => {
-                if (dbErr) {
-                    console.log('DATABASE ERROR:', dbErr);
-                } else {
-                    mailSender(req.body.email, req.body.username);
-                    connection.query(`SELECT user_id FROM users WHERE username=?`, req.body.username, (err, result) => {
-                        const userid = JSON.parse(JSON.stringify(result[0].user_id));
-                        req.session.userId = userid;
-                        res.redirect(`/`);
-                    })
-                }
-            });
-        });
+pool.getConnection(function (err, connection) {
+    if (err) throw err;
+
+    connection.query('SELECT * FROM users;', function (error, res, fields) {
+        console.log(res);
+        connection.release();
+        if (error) throw error;
     });
 });
 
-router.post('/login', (req, res) => {
-    connection.query(`SELECT * FROM users WHERE username=?;`, req.body.username, (err, result) => {
-        try {
-            const userid = JSON.parse(JSON.stringify(result[0].user_id));
-            const hashed = JSON.parse(JSON.stringify(result[0].password));
 
-            bcrypt.compare(req.body.password, hashed, (err, result1) => {
-                if (err) {
-                    console.log('ERROR:', err);
-                } else if (result1) {
-                    console.log('SUCCESS:', result1);
-                    req.session.userId = userid;
-                    res.cookie('name', req.body.username, {maxAge: 3600000});
-                    console.log('session: ', req.session.userId);
-                    res.redirect('/');
-                } else {
-                    console.log('SOMETHING ELSE WENT WRONG, RES:', result1);
-                }
-            })
-        } catch (Exception){
-            res.redirect('/');
-        }});
+router.post('/register', (req, res) => {
+    pool.getConnection(function (err, connection) {
+        if (err) throw err;
+        connection.query(`SELECT * FROM users WHERE username=?;`, req.body.username, (err, result) => {
+            try {
+                const username = JSON.parse(JSON.stringify(result[0].username));
+                console.log(result);
+                res.redirect("/register");
+            }
+            catch (Exception){
+                bcrypt.genSalt(saltRounds,(saltErr, salt) => {
+                    if (saltErr) {
+                        console.log('SALT ERROR:', saltErr);
+                    }
+                    bcrypt.hash(req.body.password, salt, (hashErr, hash) => {
+                        if (hashErr) {
+                            console.log('HASH ERROR:', hashErr);
+                        }
+                        connection.query(`INSERT INTO users (username, email, password) VALUES (?, ?, ?);`, [req.body.username, req.body.email, hash], (dbErr) => {
+                            if (dbErr) {
+                                console.log('DATABASE ERROR:', dbErr);
+                            } else {
+                                mailSender(req.body.email, req.body.username);
+                                connection.query(`SELECT user_id FROM users WHERE username=?`, req.body.username, (err, result) => {
+                                    const userid = JSON.parse(JSON.stringify(result[0].user_id));
+                                    req.session.userId = userid;
+                                    res.redirect(`/`);
+                                })
+                            }
+                        });
+                    });
+                });
+            }
+            connection.release();
+        });
+    })
 });
+
+router.post('/login', (req, res) => {
+    pool.getConnection(function (err, connection) {
+        if (err) throw err;
+        connection.query(`SELECT * FROM users WHERE username=?;`, req.body.username, (err, result) => {
+            try {
+                const userid = JSON.parse(JSON.stringify(result[0].user_id));
+                const hashed = JSON.parse(JSON.stringify(result[0].password));
+
+                bcrypt.compare(req.body.password, hashed, (err, result1) => {
+                    if (err) {
+                        console.log('ERROR:', err);
+                    } else if (result1) {
+                        console.log('SUCCESS:', result1);
+                        req.session.userId = userid;
+                        res.cookie('name', req.body.username, {maxAge: 3600000});
+                        console.log('session: ', req.session.userId);
+                        res.redirect('/');
+                    } else {
+                        console.log('SOMETHING ELSE WENT WRONG, RES:', result1);
+                    }
+                })
+            } catch (Exception){
+                res.redirect('/');
+            }});
+
+        connection.release();
+    })
+});
+
 
 
 
