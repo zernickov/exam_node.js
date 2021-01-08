@@ -23,8 +23,6 @@ $('#fetch-quote-button').click(() => {
             console.log(r1);
             r1['docs'].forEach(movie => {
                 if (movie['_id'] === r['docs']['0']['movie']) {
-                    console.log(movie['name']);
-                    console.log(r['docs']['0']);
                     const message = `${r['docs']['0']['dialog']}` + '\n' +
                         '--- Which movie is this quote from? ---';
                     appendMessage('You:', message);
