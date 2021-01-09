@@ -88,6 +88,7 @@ router.post('/register', (req, res) => {
                                 connection.query(`SELECT user_id FROM users WHERE username=?`, req.body.username, (err, result) => {
                                     const userid = JSON.parse(JSON.stringify(result[0].user_id));
                                     req.session.userId = userid;
+                                    res.cookie('name', req.body.username, {maxAge: 3600000});
                                     res.redirect(`/`);
                                 })
                             }
@@ -107,7 +108,6 @@ router.post('/login', (req, res) => {
             try {
                 const userid = JSON.parse(JSON.stringify(result[0].user_id));
                 const hashed = JSON.parse(JSON.stringify(result[0].password));
-
                 bcrypt.compare(req.body.password, hashed, (err, result1) => {
                     if (err) {
                         console.log('ERROR:', err);
@@ -124,7 +124,6 @@ router.post('/login', (req, res) => {
             } catch (Exception){
                 res.redirect('/');
             }});
-
         connection.release();
     })
 });
