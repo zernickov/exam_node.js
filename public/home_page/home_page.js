@@ -4,10 +4,9 @@ const chatContainer = document.getElementById('chat-container');
 const messageForm = document.getElementById('send-container');
 const messageInput = document.getElementById('message-input');
 
-function runFunction() {
+function scrollFunction() {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
-const t = setInterval(runFunction,0);
 
 const header = {
     headers: new Headers({
@@ -70,6 +69,7 @@ function appendMessage(name, message) {
     nameElement.innerText = name;
     messageElement.innerText = message + '\n';
     messageContainer.append(nameElement, messageElement);
+    scrollFunction();
 }
 
 // const name = req.session.username;
