@@ -88,7 +88,7 @@ router.post('/register', (req, res) => {
                                 connection.query(`SELECT user_id FROM users WHERE username=?`, req.body.username, (err, result) => {
                                     const userid = JSON.parse(JSON.stringify(result[0].user_id));
                                     req.session.userId = userid;
-                                    res.cookie('name', req.body.username, {maxAge: 3600000});
+                                    res.cookie('name', req.body.username);
                                     res.redirect(`/`);
                                 })
                             }
@@ -114,7 +114,7 @@ router.post('/login', (req, res) => {
                     } else if (result1) {
                         console.log('SUCCESS:', result1);
                         req.session.userId = userid;
-                        res.cookie('name', req.body.username, {maxAge: 3600000});
+                        res.cookie('name', req.body.username);
                         console.log('session: ', req.session.userId);
                         res.redirect('/');
                     } else {

@@ -15,7 +15,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        secure: false }
+        secure: false}
 }));
 
 const authRoute = require('./routes/auth.js');
@@ -23,11 +23,13 @@ const viewRoute = require('./routes/views.js');
 app.use(authRoute);
 app.use(viewRoute);
 
+
 const users = {};
 
 io.on('connection', (socket) => {
     socket.on('new-user', (name) => {
         users[socket.id] = name;
+        console.log(users);
         socket.broadcast.emit('user-connected', name);
     });
     socket.on('send-chat-message', (message) => {

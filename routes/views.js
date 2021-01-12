@@ -17,6 +17,7 @@ const redirectHome = (req, res, next) => {
     }
 };
 
+
 router.get('/', redirectLogin, (req, res) => {
     res.sendFile(path.resolve('public/home_page/home_page.html'));
 });
