@@ -128,5 +128,19 @@ router.post('/login', (req, res) => {
     })
 });
 
+router.post('/deleteuser', (req, res) => {
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        console.log(req.session.userId);
+        connection.query(`DELETE FROM users WHERE user_id=?`, req.session.userId, (err) => {
+            if (!err) {
+                req.session.destroy();
+                res.redirect('/')
+            }
+        });
+        connection.release();
+    });
+});
+
 
 module.exports = router;

@@ -31,7 +31,6 @@ $('#fetch-quote-button').click(() => {
     });
 });
 
-
 $('#fetch-movies-button').click(() => {
     fetch(`https://the-one-api.dev/v2/movie`, header).then(movies => movies.json()).then(movies => {
         const message = `The Hobbit: ${movies['docs']['2']['name']}, 
