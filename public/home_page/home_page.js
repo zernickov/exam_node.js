@@ -89,7 +89,6 @@ socket.on('user-connected', (name) => {
 
 socket.on('user-disconnected', (name) => {
     appendMessage(`${name} disconnected`, ``)
-
 });
 
 messageForm.addEventListener('submit', (event) => {

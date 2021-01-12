@@ -54,7 +54,7 @@ let pool = mysql.createPool({
 pool.getConnection(function (err, connection) {
     if (err) throw err;
 
-    connection.query('SELECT * FROM users;', function (error, res, fields) {
+    connection.query('SELECT * FROM users;', (error, res, fields) => {
         console.log(res);
         connection.release();
         if (error) throw error;
@@ -63,7 +63,7 @@ pool.getConnection(function (err, connection) {
 
 
 router.post('/register', (req, res) => {
-    pool.getConnection(function (err, connection) {
+    pool.getConnection((err, connection) => {
         if (err) throw err;
         connection.query(`SELECT * FROM users WHERE username=?;`, req.body.username, (err, result) => {
             try {
@@ -102,7 +102,7 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    pool.getConnection(function (err, connection) {
+    pool.getConnection((err, connection) => {
         if (err) throw err;
         connection.query(`SELECT * FROM users WHERE username=?;`, req.body.username, (err, result) => {
             try {
@@ -127,9 +127,6 @@ router.post('/login', (req, res) => {
         connection.release();
     })
 });
-
-
-
 
 
 module.exports = router;
