@@ -51,7 +51,7 @@ let pool = mysql.createPool({
 //connection.query(`DELETE FROM users WHERE user_id > 1;`);
 
 
-pool.getConnection(function (err, connection) {
+pool.getConnection((err, connection) => {
     if (err) throw err;
 
     connection.query('SELECT * FROM users;', (error, res, fields) => {
