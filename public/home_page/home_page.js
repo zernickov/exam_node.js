@@ -17,12 +17,11 @@ const header = {
 $('#fetch-quote-button').click(() => {
     let randomNumber = Math.floor(Math.random() * 199) + 800;
     fetch(`https://the-one-api.dev/v2/quote/5cd96e05de30eff6ebcce${randomNumber}`, header)
-        .then(r => r.json()).then(r => {
-        fetch(`https://the-one-api.dev/v2/movie`, header).then(r1 => r1.json()).then(r1 => {
-            console.log(r1);
-            r1['docs'].forEach(movie => {
-                if (movie['_id'] === r['docs']['0']['movie']) {
-                    const message = `${r['docs']['0']['dialog']}` + '\n' +
+        .then(quote => quote.json()).then(quote => {
+        fetch(`https://the-one-api.dev/v2/movie`, header).then(movies => movies.json()).then(movies => {
+            movies['docs'].forEach(movie => {
+                if (movie['_id'] === quote['docs']['0']['movie']) {
+                    const message = `${quote['docs']['0']['dialog']}` + '\n' +
                         '--- Which movie is this quote from? ---';
                     appendMessage('You:', message);
                     appendMessage('Answer(only you can se this): ', movie['name']);
@@ -34,25 +33,25 @@ $('#fetch-quote-button').click(() => {
 });
 
 $('#fetch-movies-button').click(() => {
-    fetch(`https://the-one-api.dev/v2/movie`, header).then(r => r.json()).then(r => {
-        const mes = `The Hobbit: ${r['docs']['2']['name']}, 
-        The Hobbit: ${r['docs']['3']['name']},
-        The Hobbit: ${r['docs']['4']['name']},
-        LOTR: ${r['docs']['6']['name']},
-        LOTR: ${r['docs']['5']['name']},
-        LOTR: ${r['docs']['7']['name']}
+    fetch(`https://the-one-api.dev/v2/movie`, header).then(movies => movies.json()).then(movies => {
+        const message = `The Hobbit: ${movies['docs']['2']['name']}, 
+        The Hobbit: ${movies['docs']['3']['name']},
+        The Hobbit: ${movies['docs']['4']['name']},
+        LOTR: ${movies['docs']['6']['name']},
+        LOTR: ${movies['docs']['5']['name']},
+        LOTR: ${movies['docs']['7']['name']}
         --- Which is your favourite of the movies? ---`;
-        appendMessage('You:', mes);
-        socket.emit('send-chat-message', mes);
+        appendMessage('You:', message);
+        socket.emit('send-chat-message', message);
     });
 });
 
 $('#fetch-chapter-button').click(() => {
     let randomNumber61 = Math.floor(Math.random() * 62);
-    fetch(`https://the-one-api.dev/v2/chapter`, header).then(r => r.json()).then(r => {
-        fetch(`https://the-one-api.dev/v2/book`, header).then(r1 => r1.json()).then(r1 => {
-            const message = `${r['docs'][randomNumber61]['chapterName']}`;
-            r1['docs'].forEach(book => {if (book['_id'] === `${r['docs'][randomNumber61]['book']}`){
+    fetch(`https://the-one-api.dev/v2/chapter`, header).then(chapters => chapters.json()).then(chapters => {
+        fetch(`https://the-one-api.dev/v2/book`, header).then(books => books.json()).then(books => {
+            const message = `${chapters['docs'][randomNumber61]['chapterName']}`;
+            books['docs'].forEach(book => {if (book['_id'] === `${r['docs'][randomNumber61]['book']}`){
                 const finishedMessage = message + 'from ' + book['name'] + '\n' +
                 '--- What do you think about that chapter? --- ';
                 appendMessage('You:', finishedMessage);
