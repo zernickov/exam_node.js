@@ -3,16 +3,15 @@ const messageContainer = document.getElementById('message-container');
 const chatContainer = document.getElementById('chat-container');
 const messageForm = document.getElementById('send-container');
 const messageInput = document.getElementById('message-input');
-
-function scrollFunction() {
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-
 const header = {
     headers: new Headers({
         Authorization: 'Bearer IGf47gpefBGHvAgsnQd9'
     })
 };
+
+function scrollFunction() {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
 
 $('#fetch-quote-button').click(() => {
     let randomNumber = Math.floor(Math.random() * 199) + 800;
@@ -31,6 +30,7 @@ $('#fetch-quote-button').click(() => {
         });
     });
 });
+
 
 $('#fetch-movies-button').click(() => {
     fetch(`https://the-one-api.dev/v2/movie`, header).then(movies => movies.json()).then(movies => {
@@ -71,7 +71,7 @@ function appendMessage(name, message) {
     scrollFunction();
 }
 
-// const name = req.session.username;
+
 const str = document.cookie;
 const name = str.split('=').slice(-1);
 appendMessage('You joined', '');
@@ -97,3 +97,25 @@ messageForm.addEventListener('submit', (event) => {
     socket.emit('send-chat-message', message);
     messageInput.value = '';
 });
+
+
+/*
+async function fetchMovieButton(){
+    let randomNumber = Math.floor(Math.random() * 199) + 800;
+    let response = await fetch(`https://the-one-api.dev/v2/quote/5cd96e05de30eff6ebcce${randomNumber}`, header);
+    let quote = await response.json();
+
+    let response1 = await fetch(`https://the-one-api.dev/v2/movie`, header);
+    let movies = await response1.json();
+
+    movies['docs'].forEach(movie => {
+        if (movie['_id'] === quote['docs']['0']['movie']) {
+            const message = `${quote['docs']['0']['dialog']}` + '\n' +
+                '--- Which movie is this quote from? ---';
+            appendMessage('You:', message);
+            appendMessage('Answer(only you can se this): ', movie['name']);
+            socket.emit('send-chat-message', message);
+        }
+    });
+}
+*/
