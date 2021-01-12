@@ -22,7 +22,7 @@
 }
 
 #send-container button {
-    font-family: Quicksand;
+    font-family: sans-serif;
     margin-left: -5px;
     height: 36px;
     background: #85DCBA;
@@ -37,7 +37,7 @@
 }
 
 .fetch-button {
-    font-family: Quicksand;
+    font-family: sans-serif;
     margin-top: 5px;
     padding: 5px;
     color: black;
@@ -55,7 +55,7 @@
 
 
 .logout-button {
-    font-family: Quicksand;
+    font-family: sans-serif;
     margin-top: 10px;
     padding: 10px;
     background: black;
@@ -72,7 +72,7 @@
 }
 
 .delete-user-button {
-    font-family: Quicksand;
+    font-family: sans-serif;
     float: right;
     margin-top: 10px;
     padding: 10px;
