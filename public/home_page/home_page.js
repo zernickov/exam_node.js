@@ -3,6 +3,7 @@ const messageContainer = document.getElementById('message-container');
 const chatContainer = document.getElementById('chat-container');
 const messageForm = document.getElementById('send-container');
 const messageInput = document.getElementById('message-input');
+
 const header = {
     headers: new Headers({
         Authorization: 'Bearer IGf47gpefBGHvAgsnQd9'
@@ -69,7 +70,6 @@ function appendMessage(name, message) {
     messageContainer.append(nameElement, messageElement);
     scrollFunction();
 }
-
 
 const str = document.cookie;
 const name = str.split('=').slice(-1);

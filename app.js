@@ -23,7 +23,6 @@ const viewRoute = require('./routes/views.js');
 app.use(authRoute);
 app.use(viewRoute);
 
-
 const users = {};
 
 io.on('connection', (socket) => {
