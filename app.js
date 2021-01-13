@@ -15,7 +15,8 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        secure: false}
+        secure: false
+    }
 }));
 
 const authRoute = require('./routes/auth.js');

@@ -34,6 +34,7 @@ $('#fetch-quote-button').click(() => {
 
 $('#fetch-movies-button').click(() => {
     fetch(`https://the-one-api.dev/v2/movie`, header).then(movies => movies.json()).then(movies => {
+        console.log(movies);
         const message = `The Hobbit: ${movies['docs']['2']['name']}, 
         The Hobbit: ${movies['docs']['3']['name']},
         The Hobbit: ${movies['docs']['4']['name']},
@@ -51,7 +52,7 @@ $('#fetch-chapter-button').click(() => {
     fetch(`https://the-one-api.dev/v2/chapter`, header).then(chapters => chapters.json()).then(chapters => {
         fetch(`https://the-one-api.dev/v2/book`, header).then(books => books.json()).then(books => {
             const message = `${chapters['docs'][randomNumber61]['chapterName']}`;
-            books['docs'].forEach(book => {if (book['_id'] === `${r['docs'][randomNumber61]['book']}`){
+            books['docs'].forEach(book => {if (book['_id'] === `${chapters['docs'][randomNumber61]['book']}`){
                 const finishedMessage = message + 'from ' + book['name'] + '\n' +
                 '--- What do you think about that chapter? --- ';
                 appendMessage('You:', finishedMessage);
